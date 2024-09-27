@@ -1,0 +1,62 @@
+compute_parameters:
+  assume_short_ts: true
+  compute_kernel: V02-structured
+  cpu_pool: 1
+  data_assimilation_parameters:
+    reservoir_da:
+      reservoir_persistence_da:
+        reservoir_persistence_usace: false
+        reservoir_persistence_usgs: false
+      reservoir_rfc_da:
+        reservoir_rfc_forecasts: false
+    streamflow_da:
+      diffusive_streamflow_nudging: false
+      streamflow_nudging: false
+  forcing_parameters:
+    binary_nexus_file_folder: ./
+    dt: 300
+    max_loop_size: 288
+    nts: 113748.0
+    qlat_file_pattern_filter: nex-*
+    qlat_input_folder: ./
+    qts_subdivisions: 12
+  parallel_compute_method: by-subnetwork-jit-clustered
+  restart_parameters:
+    start_datetime: '2022-09-01 00:00:00'
+  subnetwork_target_size: 10000
+log_parameters:
+  log_level: ERROR
+  showtiming: true
+network_topology_parameters:
+  supernetwork_parameters:
+    columns:
+      alt: alt
+      bw: BtmWdth
+      cs: ChSlp
+      downstream: toid
+      dx: length_m
+      gages: rl_gages
+      key: id
+      musk: MusK
+      musx: MusX
+      n: n
+      ncc: nCC
+      s0: So
+      tw: TopWdth
+      twcc: TopWdthCC
+      waterbody: rl_NHDWaterbodyComID
+    geo_file_path: GPKG_INPUT
+    mask_file_path: null
+    network_type: HYFeaturesNetwork
+    synthetic_wb_segments: null
+    title_string: Ngen
+  waterbody_parameters:
+    break_network_at_waterbodies: false
+    level_pool:
+      level_pool_waterbody_parameter_file_path: GPKG_INPUT
+output_parameters:
+  stream_output:
+    stream_output_directory: ./
+    stream_output_internal_frequency: 60
+    stream_output_time: 10000000
+    stream_output_type: .nc

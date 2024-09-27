@@ -1,0 +1,135 @@
+# file: calibration_config.yaml
+general:
+  strategy: 
+      # Type of strategy, currently supported is estimation
+      type: estimation
+      # defaults to dds (currently, the only supported algorithm)
+      algorithm: "dds"
+
+  # Enable model runtime logging (captures standard out and error and writes to file)
+  # logs will be written to <model.type>.log when enabled
+  # defaults to False, which sends all output to /dev/null
+  log: True
+
+  start_iteration: 0
+  # The total number of search iterations to run
+  iterations: 100 
+  
+  random_seed: 42
+
+  workdir: WORKDIR_INPUT
+
+# Define parameters to calibrate, their bounds, and initial values.
+lgar_params: &lgar_params
+  - name: smcmin
+    init: 0.065
+    min: 0.01
+    max: 0.15
+  - name: smcmax
+    init: 0.42
+    min: 0.3
+    max: 0.8
+  - name: van_genuchten_n
+    init: 1.46
+    min: 1.01
+    max: 3.0
+  - name: van_genuchten_alpha
+    init: 0.02
+    min: 0.001
+    max: 0.3
+  - name: hydraulic_conductivity
+    init: 0.57
+    min: 0.001
+    max: 100 
+  - name: field_capacity
+    init: 340.9
+    min: 10.3
+    max: 516.6
+  - name: ponded_depth_max
+    init: 2.0
+    min: 0
+    max: 5.0
+
+nom_parameters: &nom_parameters
+  -
+    name: MFSNO # fractional snow covered area (FSNO) curve parameter (pseduo multiplier)
+    min: 1
+    max: 4
+    init: 2.5
+  -
+    name: SCAMAX # maximum fractional snow-covered area
+    min: 0.7
+    max: 1.0
+    init: 1.0
+  -
+    name: RSURF_SNOW # surface resistence for snow [s/m]
+    min: 0.1
+    max: 100.0
+    init: 50.0
+  # -
+  #   name: HVT # canopy top height (m)
+  #   min: 0.0
+  #   max: 20.0
+  #   init: 1.0
+  -
+    name: CWP # canopy wind absorption coefficient (formerly CWPVT) (multiplier)
+    # values below derived as absolute values from param tables
+    min: 0.18
+    max: 5.0
+    init: 1.0
+  -
+    name: VCMX25 # maximum rate of carboxylation at 25c (umol co2/m**2/s) (multiplier)
+    # values below derived as absolute values from param tables
+    min: 0.0
+    max: 80.0
+    init: 50.0
+  -
+    name: MP # slope of conductance-to-photosynthesis relationship (multiplier)
+    # values below derived as absolute values from param tables
+    min: 3.6
+    max: 12.6
+    init: 9.0
+
+# Model specific configuration
+model:
+    type: ngen
+    # NOTE: you may need to adjust this to the location of your NextGen installation
+    # A binary in $PATH or a qualified path to the binary to run
+    binary: NGEN_INPUT
+    realization: REALIZATION_INPUT
+    # Required path to catchment hydrofabirc file
+    hydrofabric: GPKG_INPUT
+    eval_feature: EVAL_FEAT_INPUT
+    routing_output: troute_output_201609010000.nc
+    # Each catchment upstream of observable nexus gets its own permuted parameter space, evaluates at one observable nexus 
+    strategy: uniform
+    params: 
+        # Note, these MUST be the same as the realization model_type_name for the keys
+        NoahOWP: *nom_parameters
+        LGAR: *lgar_params
+
+    plugins:
+      - "plugins.metrics.ComputeMetrics"
+
+    plugin_settings:
+      ngen_cal_troute_output:
+        # NOTE: this might not be right
+        # TODO: consider automating this. there are cases where it will be more
+        # difficult than others to get this right.
+        validation_routing_output: troute_output_202209010000.nc
+    eval_params:
+      #simulaiton time starts 2016-09-01 00:00:00
+      #so a 1 month spinup before evaluating for parameter estimation
+      #evaluation_start: '2016-09-01 00:00:00'
+      #evaluation_stop: '2016-09-30 23:00:00'
+      evaluation_start: '2016-10-01 00:00:00'
+      evaluation_stop: '2021-09-30 23:00:00'
+      # choices are "kling_gupta", "nnse", "custom", "single_peak", "volume"
+      objective: "kling_gupta"
+    val_params:
+     #so a 1 month spinup before evaluating for parameter estimation
+     sim_start: '2022-09-01 00:00:00'
+     evaluation_start: '2022-10-01 00:00:00'
+     evaluation_stop: '2023-09-30 23:00:00'
+     # choices are "kling_gupta", "nnse", "custom", "single_peak", "volume"
+     objective: "kling_gupta"
