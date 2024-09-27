@@ -47,7 +47,8 @@ Copy the formulation realization template to calibrate, e.g.
 - CONFIG_DIR : the directory which bmi configuration files are stored.
 - HYDROFAB_INPUT : the hydrofabric geopackage name prefix, e.g. `hf_211_<location>`
 
->[!NOTE] These realizations assumes
+>[!NOTE] 
+>These realizations assumes
 > BMI libs are located in `/lib`
 > Forcing data is under `/home/ec2-user/local_data/forcing/1979_to_2024/`
 > and
@@ -84,4 +85,5 @@ python -m ngen.cal <config.yaml>
 ```
 where `<config.yaml>` is the ngen-cal config created from the formulation template, e.g. `cfe_nash_s_template.yaml`
 
->[!NOTE] The plugins directory of this repository MUST be in the same working directory where `ngen-cal` is launched from!
+>[!NOTE]
+> The plugins directory of this repository MUST be in the same working directory where `ngen-cal` is launched from!
