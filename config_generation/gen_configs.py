@@ -10,19 +10,6 @@ import pandas as pd
 from ngen.config_gen.generate import BuilderVisitableFn, generate_configs
 from ngen.config_gen.hook_providers import DefaultHookProvider
 
-missing = [
-    "02299950",
-    "02481880",
-    "05061000",
-    "06469400",
-    "09112500",
-]
-
-testing = [
-    "03366500",
-    "08159000",
-]
-
 targets = [
     "01105000",
     "01391500",
@@ -63,9 +50,10 @@ targets = [
 ]
 
 # change these to fit your needs
-STATIC_DATA = Path("/Users/austinraney/github/lynker/benchmark/sims/static")
-HF_DIR = Path("/Users/austinraney/github/lynker/benchmark/hydrofabric")
-HF_LNK_FILE = "/Users/austinraney/github/lynker/benchmark/model-attributes_benchmark_2_1_1.parquet"
+PARENT_DIR = Path(__file__).parent
+STATIC_DATA = PARENT_DIR / "static"
+HF_DIR = PARENT_DIR / "hydrofabric"
+HF_LNK_FILE = PARENT_DIR / "model-attributes_benchmark_2_1_1.parquet"
 
 
 def main() -> int:
@@ -90,7 +78,7 @@ def main() -> int:
                     print(f"failed to generate {target}\n{e!s}")
 
             subprocess.check_call(f"cp -r {STATIC_DATA!s} {configs_dir!s}", shell=True)
-            subprocess.check_call(f"tar cz {archive_output!s} {configs_dir!s}", shell=True)
+            subprocess.check_call(f"tar czf {archive_output!s} {configs_dir!s}", shell=True)
 
     return ret
 
@@ -99,7 +87,7 @@ def gen_config(root: Path, hf_dir: Path, target: str):
     hf_file = hf_dir / f"hf_v211_{target}.gpkg"
 
     hf: gpd.GeoDataFrame = gpd.read_file(hf_file, layer="divides")
-    hf_lnk_data: pd.DataFrame = pd.read_parquet(HF_LNK_DATA)
+    hf_lnk_data: pd.DataFrame = pd.read_parquet(HF_LNK_FILE)
     hf_lnk_data = hf_lnk_data[hf_lnk_data["divide_id"].isin(hf["divide_id"])]
 
     hooks = {
