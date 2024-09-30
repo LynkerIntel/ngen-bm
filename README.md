@@ -40,7 +40,33 @@ The GIUH (Geomorphological Instantaneous Unit Hydrograph) and Nash Cascade Surfa
 **Note 2** The script can be run directly from RStudio too.
 
 # Generate ngen bmi configuration files
-@aaraney TODO
+
+The [`gen_configs.py`)[./config_generation/gen_configs.py] script can generate `init_config` configuration files for the 4 NextGen benchmark formulations.
+Configuration files are written to a gzipped tar archive with the name `all_configs.tar.gz` in the parent directory of `gen_configs.py`.
+The archive file has a directory structure that looks as follows:
+
+```
+configs
+└── hf_v211_01105000
+    ├── CFE_NASH_S_cat-9459.ini
+    ├── CFE_NASH_X_cat-9459.ini
+    ├── LgarTmp_cat-9459.ini
+    ├── NoahOWP_cat-9459.namelist
+    ├── Topmodel_cat-9459.dat
+    ├── params_cat-9459.dat
+    └── subcat_cat-9459.dat
+```
+
+The archive has a single root directory, `config`, and subdirectories for each gage in the exercise.
+Each subdirectory contains `init_config` configuration files for each aforementioned bmi module.
+
+Configuration file fields are populated from either default values, hydrofabric `model-attributes`, or hydrofabric `divides` information.
+These mappings are captured programmatically in the `./config_generation/*_init config.py` python modules.
+
+The data requirements of `gen_configs.py` are:
+    - basin scale hydrofabrics; expected to be located in `./config_generation/hydrofabrics/` and follow the naming convention `hf_v211_01105000.gpkg`.
+    - exercise scale hydrofabric model-attributes information; expected to be located at`./config_generation/model-attributes_benchmark_2_1_1.parquet`
+    - NOM and LASAM static parameter tables; expected to be located in `./config_generation/static`
 
 # Use realization and configuration templates
 
