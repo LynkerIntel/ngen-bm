@@ -41,7 +41,7 @@ The GIUH (Geomorphological Instantaneous Unit Hydrograph) and Nash Cascade Surfa
 
 # Generate ngen bmi configuration files
 
-The [`gen_configs.py`)[./config_generation/gen_configs.py] script can generate `init_config` configuration files for the 4 NextGen benchmark formulations.
+The [`gen_configs.py`](./config_generation/gen_configs.py) script can generate `init_config` configuration files for the 4 NextGen benchmark formulations.
 Configuration files are written to a gzipped tar archive with the name `all_configs.tar.gz` in the parent directory of `gen_configs.py`.
 The archive file has a directory structure that looks as follows:
 
