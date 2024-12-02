@@ -30,7 +30,7 @@ The forcing data used to run the models, must contain at least the calibration a
 > The unit attribute for `APCP_surface` is *intentionally* wrong, and is set to `mm/hr` to allow the model engine to do unit conversions of the precip on behalf of models which assume the mass flux is equivalent to `mm/hr`.
 
 # Generate additaional basin attributes
-The GIUH (Geomorphological Instantaneous Unit Hydrograph) and Nash Cascade Surface parameters are obtained using an R-based workflow [here](https://github.com/ajkhattak/basin_workflow/basin_workflow). These parameters can be computed using the following steps:
+The GIUH (Geomorphological Instantaneous Unit Hydrograph) and Nash Cascade Surface parameters are obtained using an R-based workflow [here](https://github.com/ajkhattak/basin_workflow/). These parameters can be computed using the following steps:
   - Clone `git clone https://github.com/ajkhattak/basin_workflow`
   - Setup `workflow_dir`, `output_dir`, `gpkg_model_params` in the configureation file [here](https://github.com/ajkhattak/basin_workflow/blob/master/basin_workflow/configs/config_workflow.yaml)
   - from terminal run `python <path_to_basin_workflow_repo>/basin_workflow/main.py -gpkg`
